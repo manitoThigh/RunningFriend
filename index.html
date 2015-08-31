@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<!--
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+-->
+<html>
+    <head>
+        <title>RunFriend</title>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link type="text/css" rel="stylesheet" href="support/bootstrap-3.3.4-dist/css/bootstrap.min.css"/>
+        <link type="text/css" rel="stylesheet" href="support/bootstrap-3.3.4-dist/css/bootstrap-datetimepicker.min.css"/>
+        <link rel="sytlesheet" href="support/Openlayers3/css/ol.css"/>
+        <link rel="stylesheet" href="mylib/style.css"/>
+        <link rel="stylesheet" href="mylib/dialog.css"/>
+        <link rel="stylesheet" href="mylib/appoint.css"/>
+        <link type="text/css" rel="stylesheet" href="support/jquery-ui-1.11.2.custom/jquery-ui.min.css"/>
+
+        <script src="support/jquery-1.11.1.min.js"></script>
+        <script src=" http://api.tianditu.com/js/maps.js" type="text/javascript"></script>
+        <script src="support/carhartl-jquery-cookie/jquery.cookie.js"></script>
+        <script src="myjs/ajax.js"></script>
+        <script src="support/Openlayers3/build/ol-debug.js"></script>
+        <script src="support/bootstrap-3.3.4-dist/js/bootstrap.min.js"></script>
+        <script src="support/bootstrap-3.3.4-dist/js/bootstrap-datetimepicker.min.js"></script>
+        <script src="support/bootstrap-3.3.4-dist/js/bootstrap-typeahead.js"></script>
+
+        <!--<script src="http://v2.bootcss.com/assets/js/bootstrap-typeahead.js"></script>-->
+
+        <script src="support/echart/dist/echarts-all.js"></script>
+        <script src="myjs/friends.js"></script>
+        <script src="myjs/road.js"></script>
+        <script src="myjs/aboutus.js"></script>
+
+        <script src="myjs/uuid.js"></script>
+        <script src="myjs/LoginDialog.js"></script>
+        <script src="myjs/RegistDialog.js"></script>
+        <script src="myjs/appoint.js"></script>
+        <script src="myjs/checkappoint.js"></script>
+        <script src="myjs/DisplayRegularPlace.js"></script>
+        <script src="myjs/Route.js"></script>
+        <script src="support/md5.js"></script>
+        
+        <script src="support/ConMenu.js"></script>
+        <script>
+            var route = 1;
+            var palaceHasShow = false;
+            var palace = false;
+            var map = false;
+            $(document).ready(function () {
+                var opt = {div: "mapcontainer"};
+                route = new Route(opt);
+                route.run();
+            });
+
+            function Login() {
+                var dlg = new LoginDialog();
+                dlg.show();
+            }
+            ;
+            function Regist() {
+                var dlg = new RegistDialog();
+                dlg.show();
+            }
+            ;
+
+            function ShowPalace() {
+                map = route.GetMap();
+                if (palaceHasShow) {
+                    palace.RemoveMaker();
+                    palaceHasShow = false;
+                } else {
+                    palace = new DisRegularPlace(map);
+                    palace.Congigure();
+                    palace.AddMaker();
+                    palaceHasShow = true;
+                }
+            }
+            
+            function AdvisePoints(){
+                map = route.GetMap();
+                var myMenu = new AddMyMenu(map);
+//                var adPoint = new AdvisePoint(map);
+            }
+
+        </script>
+    </head>
+    <body>
+        <!--header start-->
+        <header class="header-frontend">
+            <div class="navbar navbar-default navbar-fixed-top" role="navigation">
+                <div class="container">
+                    <div class="navbar-header">
+     　<!-- .navbar-toggle样式用于toggle收缩的内容，即nav-collapse collapse样式所在元素 -->
+                        <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                            <span class="sr-only">Toggle Navigation</span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </button>
+                        <!-- 确保无论是宽屏还是窄屏，navbar-brand都显示 -->
+                        <a class="navbar-brand">Running<span>Friend</span></a>
+                    </div>
+                    <!-- 屏幕宽度小于768px时，div.navbar-responsive-collapse容器里的内容都会隐藏，显示icon-bar图标，当点击icon-bar图标时，再展开。屏幕大于768px时，默认显示。 -->
+                    <div class="collapse navbar-collapse navbar-responsive-collapse">
+                        <ul class="nav navbar-nav">
+                            <li><a id="login" onclick="Login()">登录</a></li>
+                            <li><a id="register" onclick="Regist()">注册</a></li>
+                            <li><a id="yuepao">发起跑步</a></li>
+                            <li class="dropdown">
+                                <a data-toggle="dropdown" class="dropdown-toggle">路线设计<span class="caret"></span></a>
+                                <ul class="dropdown-menu">
+                                    <li><a id="se-road" onclick="ShowPalace()">跑步圣地</a></li>
+                                    <li><a id="diy-road" >自定义路线</a></li>
+                                    <li><a id="point-advise" onclick="AdvisePoints()">地点推荐</a></li>
+                                    <li><a id="line-advise">路线推荐</a></li>
+                                    <li><a id="road-evaluate">路线评价</a></li>
+                                </ul>
+                            </li>
+                            <li><a id="my-road">我的路线</a></li>
+                            <li><a id="friends">好友</a></li>
+                            <li><a id="aboutus">关于我们</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </header>
+        <!--header end-->
+        <div class="yahei">
+            <div id="side">
+                <input type='checkbox' id='sideToggle'>
+                <aside id="sidemenu">
+                    <!--在这个位置进行功能的实现，查询什么什么的-->
+                    <table>
+                        <tr>
+                            <td>
+                                <div id="content">
+                                    <h2>Side Menu</h2>
+                                </div>
+                            </td>
+                            <td id="forlabel">
+                                <label id='sideMenuControl' for='sideToggle'>=</label>
+                            </td>
+                        </tr>
+                    </table>
+                </aside>
+                <div id='wrap'>
+                    <div class="mapcontainer" id="mapcontainer"> 
+                        <!--侧边抽屉式响应-->   
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
