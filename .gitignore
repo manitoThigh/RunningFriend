@@ -1,0 +1,7 @@
+#忽略netbeans的配置文件
+project.properties
+project.xml
+config.properties 
+private.properties  
+private.xml
+
