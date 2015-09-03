@@ -112,7 +112,7 @@ and open the template in the editor.
                                 <a data-toggle="dropdown" class="dropdown-toggle">路线设计<span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a id="se-road" onclick="ShowPalace()">跑步圣地</a></li>
-                                    <li><a id="diy-road" >自定义路线</a></li>
+                                    <li><a id="diy-road" onclick="makeRoute()">自定义路线</a></li>
                                     <li><a id="point-advise" onclick="AdvisePoints()">地点推荐</a></li>
                                     <li><a id="line-advise">路线推荐</a></li>
                                     <li><a id="road-evaluate">路线评价</a></li>
@@ -120,7 +120,7 @@ and open the template in the editor.
                             </li>
                             <li><a id="my-road">我的路线</a></li>
                             <li><a id="friends">好友</a></li>
-                            <li><a id="aboutus">关于我们</a></li>
+                            <li><a id="aboutus" onclick="aboutus()">关于我们</a></li>
                         </ul>
                     </div>
                 </div>
@@ -152,5 +152,52 @@ and open the template in the editor.
                 </div>
             </div>
         </div>
+        
+        <script>
+            function makeRoute(){
+                if (!sideToggle.checked)
+                {
+                    $("#sideToggle").trigger("click");
+                }
+                var me = this;
+                me.html =
+                        '<div id="makeroute">' +
+                        '<h3>自定义路线</h3>' +
+                        '   <h4>使用方法：</h4>' +
+                        '   <h4>1、在地图中使用点击右键选择设定起点</h4>' +
+                        '   <h4>2、选择跑步模式</h4>' +
+                        '   <h4>3、环圈跑和往返跑不需要设定终点。其他请自定义终点</h4>' +
+                        '   <h4>4、点击规划路线按钮，完成路线设计</h4>' +
+                        '<h3>输入跑步路程</h3>' +
+                        '<h4></h4>' +
+                        '</div>';
+                //$(me.html).appendTo($('#sidemenu'));
+                $('#content').html(me.html);
+            
+            }
+        </script>
+        
+        <!-- 关于我们-->
+        <script>
+            function aboutus() {
+                if (!sideToggle.checked)
+                {
+                    $("#sideToggle").trigger("click");
+                }
+                var me = this;
+                me.html =
+                        '<div id="information">' +
+                        '<h3>小组成员</h3>' +
+                        '   <h4>刘文凯</h4>' +
+                        '   <h4>罗&nbsp;&nbsp;&nbsp;靓</h4>' +
+                        '   <h4>丁雪兴</h4>' +
+                        '   <h4>李晗孙白</h4>' +
+                        '<h3>指导老师</h3>' +
+                        '<h4>张宝一</h4>' +
+                        '</div>';
+                //$(me.html).appendTo($('#sidemenu'));
+                $('#content').html(me.html);
+            }
+        </script>
     </body>
 </html>
