@@ -23,6 +23,8 @@ Route = function (opt) {
     me.edges = 3;//环圈路线规划的边的数目，默认为4，可以修改，后果自负
     me.counter = 0; //环圈路线规划的计数器
     me.angel = 0;//环圈跑的角度计数
+    
+    me.runDistance = 0;//想跑的距离
 
     me.options = $.extend({
         div: null
