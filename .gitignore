@@ -4,4 +4,5 @@ project.xml
 config.properties 
 private.properties  
 private.xml
-
+#忽略数据库连接文件
+DBConnection.php
