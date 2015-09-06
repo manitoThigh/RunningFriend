@@ -27,11 +27,11 @@ document.loading.percent.value=bar+"%"　
 if (bar<99)　 
 {setTimeout("count()",100);}　 
 else　 
-{window.location = "http://localhost:8080/RuningFriend/index.html";}　 
+{window.location = "/RunningFriend/home.html";}　 
 }</script> 
 　</p> 
 </form> 
-<p align="center"> 如果您的浏览器不支持跳转,<a style="text-decoration: none" href="http://localhost:8080/RuningFriend/index.html"><font color="#FF0000">请点这里</font></a>.</p>
+<p align="center"> 如果您的浏览器不支持跳转,<a style="text-decoration: none" href="/RunningFriend/home.html"><font color="#FF0000">请点这里</font></a>.</p>
 </body>
 </html>';
 

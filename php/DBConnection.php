@@ -1,7 +1,7 @@
 <?php
 
 $HOST = "localhost";
-$DBNAME = "postgres";
+$DBNAME = "runningfriend";
 $USER = "postgres";
 $PASSWORD = "123456";
 $PORT = 5432;

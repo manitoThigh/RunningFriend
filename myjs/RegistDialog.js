@@ -55,13 +55,13 @@ window.RF.UI = window.RF.UI || {};
                 '               <div class = "col-xs-12" >' +
                 '                   <div class = "input-group" >' +
                 '                       <span class = "input-group-addon" > <span class = "glyphicon glyphicon-lock" > </span></span >' +
-                '                       <input type = "text" id = "' + me.passwordID + '" name = "password" class = "form-control" placeholder = "密码" >' +
+                '                       <input type = "passWord" id = "' + me.passwordID + '" name = "password" class = "form-control" placeholder = "密码" >' +
                 '                   </div>' +
                 '               </div>' +
                 '               <div class = "col-xs-12" >' +
                 '                   <div class = "input-group" >' +
                 '                       <span class = "input-group-addon" > <span class = "glyphicon glyphicon-lock" > </span></span >' +
-                '                       <input type = "text" id = "' + me.password1ID + '" name = "password" class = "form-control" placeholder = "再次确定密码" >' +
+                '                       <input type = "passWord" id = "' + me.password1ID + '" name = "password" class = "form-control" placeholder = "再次确定密码" >' +
                 '                   </div>' +
                 '               </div>' +
                 '           </div>' +
@@ -125,9 +125,10 @@ window.RF.UI = window.RF.UI || {};
             success: function (data) {
                 var obj = JSON.parse(data);
                 if(obj.success){
-                    alert('注册成功');
+                    alert(obj.message);
+                    me.hide();
                 }else{
-                    alert('注册失败');
+                    alert(obj.message);
                 }
             },
             error: function (xhr, msg) {
@@ -196,7 +197,9 @@ window.RF.UI = window.RF.UI || {};
          }
          });*/
     };
-
+    RegistDialog.prototype.hide = function () {
+        $('#registModal').modal('hide');
+    };
     RegistDialog.prototype.destroy = function () {
         var me = this;
         $("#" + me.dlgID).remove();

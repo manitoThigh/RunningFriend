@@ -122,19 +122,10 @@ window.RF.UI = window.RF.UI || {};
     LoginDialog.prototype.show = function () {
         //bootstrap对话框弹出
         $('#loginModal').modal('show');
-        /*var me = this;
-         //jquery对话框额特效
-         $("#" + me.dlgID).dialog({
-         modal: true,
-         show: {
-         effect: "blind",
-         duration: 1000
-         },
-         hide: {
-         effect: "explode",
-         duration: 1000
-         }
-         });*/
+    };
+    LoginDialog.prototype.hide = function () {
+        //bootstrap对话框弹出
+        $('#loginModal').modal('hide');
     };
     LoginDialog.prototype.destroy = function () {
         var me = this;
@@ -170,6 +161,7 @@ window.RF.UI = window.RF.UI || {};
                 var obj = JSON.parse(data);
                 if (obj.success) {
                     alert('登录成功');
+                    me.hide();
                 } else {
                     alert(obj.message);
                 }
