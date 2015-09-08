@@ -96,7 +96,8 @@ window.RF.UI = window.RF.UI || {};
                 }
                 me.clearAll();
                 me.isCircle = 0;
-                me.retureRoute(1200);
+                me.getDistance();
+                me.retureRoute(me.runDistance);
                 me.route(me.startposition, me.destposition, 3);
             }
         }, {
@@ -108,7 +109,8 @@ window.RF.UI = window.RF.UI || {};
                 }
                 me.clearAll();
                 me.isCircle = 1;
-                me.circleRoute(me.startposition, 1200);
+                me.getDistance();
+                me.circleRoute(me.startposition, me.runDistance);
                 // me.isCircle = 0; 
             }
         }];
@@ -666,6 +668,11 @@ window.RF.UI = window.RF.UI || {};
             $("#sideToggle").trigger("click");
         }
         $('#content').replaceWith('<div id="content">' + routehtml + '</div>');
+    }
+    
+    Route.prototype.getDistance = function(){
+        var me = this;
+        me.runDistance = $("#rundistance").val();
     }
 
 
