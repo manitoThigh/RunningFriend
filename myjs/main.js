@@ -1,6 +1,6 @@
 (function ($) {
-    define(['myjs/LoginDialog', 'myjs/RegistDialog', 'myjs/mapcontrol', 'myjs/Route'],
-            function (Login, Regist, MapControl, Route) {
+    define(['myjs/LoginDialog', 'myjs/RegistDialog', 'myjs/mapcontrol', 'myjs/Route','myjs/appoint'],
+            function (Login, Regist, MapControl, Route,Appoint) {
                 var initEvent = function () {
                     //关于我们
                     $("#aboutus").click(function () {
@@ -71,6 +71,13 @@
                         map: map.map
                     });
                     route.rightclick();
+
+                    //发起跑步
+                    var appoint=new Appoint();
+                    $("#yuepao").click(function(){
+                        appoint.render();
+                    });
+                    
                 };
                 initEvent();
             });
