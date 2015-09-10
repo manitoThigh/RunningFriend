@@ -12,20 +12,15 @@
     </editor-bookmarks>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/D:/gitClone/RunningFriend/.gitignore</file>
-            <file>file:/D:/gitClone/RunningFriend/myjs/RegistDialog.js</file>
+            <file>file:/D:/gitClone/RunningFriend/mylib/appoint.css</file>
+            <file>file:/D:/gitClone/RunningFriend/php/Service.php</file>
+            <file>file:/D:/gitClone/RunningFriend/mylib/style.css</file>
+            <file>file:/D:/gitClone/RunningFriend/myjs/appoint.js</file>
+            <file>file:/D:/gitClone/RunningFriend/myjs/DisplayRegularPlace.js</file>
             <file>file:/D:/gitClone/RunningFriend/index.html</file>
-            <file>file:/D:/gitClone/RunningFriend/php/DBConnection.php</file>
-            <file>file:/D:/gitClone/RunningFriend/php/register.php</file>
-            <file>file:/D:/gitClone/RunningFriend/php/VerifyRegister.php</file>
-            <file>file:/D:/gitClone/RunningFriend/myjs/LoginDialog.js</file>
-            <file>file:/D:/gitClone/RunningFriend/myjs/mapcontrol.js</file>
             <file>file:/D:/gitClone/RunningFriend/home.html</file>
-            <file>file:/D:/gitClone/RunningFriend/php/LService.php</file>
-            <file>file:/D:/gitClone/RunningFriend/myjs/aboutus.js</file>
             <file>file:/D:/gitClone/RunningFriend/myjs/main.js</file>
-            <file>file:/D:/gitClone/RunningFriend/myjs/Route.js</file>
-            <file>file:/D:/gitClone/RunningFriend/myjs/ajax.js</file>
+            <file>file:/D:/gitClone/RunningFriend/php/Appointment.php</file>
         </group>
     </open-files>
 </project-private>

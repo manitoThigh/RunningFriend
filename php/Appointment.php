@@ -68,10 +68,7 @@ class Appointment extends server {
                 $i++;
             }
             $this->_response["friend"] = $friend;
-            $this->_response["datalength"] = "1";
-        } else {
-            $this->_response["datalength"] = "0";
-        }
+        } 
         pg_free_result($result);
         $this->makeresponse(true, "ok");
         pg_query($this->_conn, "end");

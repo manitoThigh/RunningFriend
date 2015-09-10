@@ -18,3 +18,17 @@ and open the template in the editor.
     font-size:  20px;
     font-family:"Microsoft YaHei";
 }
+.input-group{
+	overflow: hidden;
+}
+.input-group .friend{
+    float: left;
+    height: 20px;
+    line-height: 20px;
+    padding: 0 10px;
+}
+.friend .name{
+	color:#fff;
+	font-size: 26px;
+	display: inline-block;
+}

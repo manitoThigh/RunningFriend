@@ -30,6 +30,9 @@ if ($params->type == "login") {
 
 if ($typearr[0] === "APPOINT") {
     $sv = new Appointment();
+    $sv->setRequest($params);
+    $sv->run();
+    echo json_encode($sv->getResponse());
 } else {
     $response = array();
     $response["success"] = false;
