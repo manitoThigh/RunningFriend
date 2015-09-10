@@ -24,8 +24,7 @@
                     if (!sideToggle.checked) {
                         $("#sideToggle").trigger("click");
                     }
-                    var me = this;
-                    me.html =
+                    var html =
                         '<div id="content">' +
                         '<div id="makeroute">' +
                         '<h3>自定义路线</h3>' +
@@ -37,8 +36,7 @@
                         '<h3>输入跑步路程</h3>' +
                         '<input type="text" id = "rundistance"  placeholder = "距离" style="color:#000;" />' +
                         '</div>' + '</div>';
-                    //$(me.html).appendTo($('#sidemenu'));
-                    $('#content').replaceWith(me.html);
+                    $('#content').replaceWith(html);
                 });
 
                 //登录对话框显示
@@ -55,7 +53,7 @@
                     register.show();
                 });
 
-
+                
 
                 //地图显示
                 var map = new MapControl({
@@ -87,7 +85,9 @@
                 });
 
                 //发起跑步
-                var appoint = new Appoint();
+                var appoint = new Appoint({
+                        routeController:route
+                    });
                 $("#yuepao").click(function() {
                     appoint.render();
                 });

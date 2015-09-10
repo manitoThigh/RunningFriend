@@ -30,9 +30,10 @@ window.RF.UI = window.RF.UI || {};
 		me.counter = 0; //环圈路线规划的计数器
 		me.angel = 0; //环圈跑的角度计数  
 		me.runDistance = 0; //想跑的距离
+		me.infoShow=true;
+		me.lineclick;
 		me.options = $.extend({
-			map: null,
-			infoShow: true
+			map: null
 		}, opt);
 		if (!me.options.map) {
 			me.run();
@@ -351,6 +352,7 @@ window.RF.UI = window.RF.UI || {};
 			routeLine = new TPolyline(lineArr, style);
 		}
 		me.map.addOverLay(routeLine);
+		me.lineClick(routeLine);
 		me.map.addOverLay(startFeature);
 		me.map.addOverLay(destFeature);
 		if (midFeatures.length > 0) {
@@ -668,6 +670,19 @@ window.RF.UI = window.RF.UI || {};
 	Route.prototype.getDistance = function() {
 		var me = this;
 		me.runDistance = $("#rundistance").val();
+	}
+	//鼠标点击线事件
+	Route.prototype.lineClick = function(line) {
+		var me=this;
+		me.removeLineClick();
+		//注册线的点击事件
+        me.lineclick = TEvent.addListener(line,"click",function(p){
+            alert("click line");
+        });
+	};
+	Route.prototype.removeLineClick=function(){
+		var me=this;
+		TEvent.removeListener(me.lineclick);
 	}
 
 

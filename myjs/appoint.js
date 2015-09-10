@@ -7,13 +7,11 @@ window.RF.UI = window.RF.UI || {};
     var Appoint = function(opt) {
         var me = this;
         me.options = $.extend({
-            div: null
+            routeController:null
         }, opt);
-        if (!me.options.div) {
-            return null;
-        }
-        me.div = $("#" + me.options.div);
+        me.routeController=me.options.routeController;
         me.appointFriend=[];
+        me.route;
     };
     //界面渲染
     Appoint.prototype.render = function() {
@@ -86,6 +84,9 @@ window.RF.UI = window.RF.UI || {};
         //提交路线
         $("#appoint-confirm").click(function() {
             me.summitRoute();
+        });
+        $("#appoint_drawroute").click(function() {
+            me.appointDrawRoute();
         });
         // me.getroutelist();
     };
@@ -324,7 +325,10 @@ window.RF.UI = window.RF.UI || {};
         Tpoint = new TLngLat(parseFloat(xy[0]), parseFloat(xy[1]))
         return Tpoint;
     };
-
+    Appoint.prototype.appointDrawRoute = function() {
+        var me=this;
+        me.routeController.infoShow=false;
+    };
 
     if (typeof(module) !== 'undefined') {
         module.exports = Appoint;
