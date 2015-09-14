@@ -32,6 +32,7 @@ window.RF.UI = window.RF.UI || {};
 		me.runDistance = 0; //想跑的距离
 		me.infoShow=true;
 		me.lineclick;
+		me.events={};
 		me.options = $.extend({
 			map: null
 		}, opt);
@@ -623,7 +624,10 @@ window.RF.UI = window.RF.UI || {};
 
 
 	}
-
+	Route.prototype.on = function(evt, fn) {
+	        this.events[evt] = fn;
+	        return this;
+	    };
 	Route.prototype.random = function() {
 		var me = this;
 
@@ -677,7 +681,41 @@ window.RF.UI = window.RF.UI || {};
 		me.removeLineClick();
 		//注册线的点击事件
         me.lineclick = TEvent.addListener(line,"click",function(p){
-            alert("click line");
+        	var clickPoint=me.map.fromContainerPixelToLngLat(p);
+        	var infoWin=new TInfoWindow(clickPoint,new TPixel([0,-34]));
+        	var infoHtml;
+            if(!me.infoShow){
+            	infoHtml=
+            		'	<div class="info-wrap">将此路线设为活动路线？</div> '+
+            		'	<button class="btn-appoint-draw">确定</button>'+
+            		'	<button class="btn-route-delete">删除</button>';
+            	
+            }
+            else{
+            	infoHtml=
+            	'<div class="info-body">'+
+            	'	<div class=route-name><span>名称</span><input type="text"/></div>'+
+            	'	<div class=route-note><span>备注</span><textarea></textarea></div>'+
+            	'	<button class="btn-route-save">保存</button>'+
+            	'	<button class="btn-route-delete">删除</button>';
+            	'</div>';
+            	infoWin.setTitle("保存路线");
+            }
+            infoWin.setLabel(infoHtml);
+            me.map.addOverLay(infoWin);
+            $('.btn-appoint-draw').unbind().click(function() {
+                if (me.events.confirm) {
+                    me.events.confirm.call(this);
+                }
+                me.map.removeOverLay(infoWin);
+            });
+            $('.btn-route-save').unbind().click(function(){
+            	me.removeLineClick();
+            });
+            $('.btn-route-delete').unbind().click(function(){
+            	me.map.removeOverLay(infoWin);
+            	me.clearAll();
+            });
         });
 	};
 	Route.prototype.removeLineClick=function(){

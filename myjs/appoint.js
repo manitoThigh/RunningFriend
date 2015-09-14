@@ -328,6 +328,11 @@ window.RF.UI = window.RF.UI || {};
     Appoint.prototype.appointDrawRoute = function() {
         var me=this;
         me.routeController.infoShow=false;
+        me.routeController.on("confirm",function(){
+            me.route=me.routeController.routelatlon;
+            console.log(me.route);
+            me.routeController.infoShow=true;
+        });
     };
 
     if (typeof(module) !== 'undefined') {

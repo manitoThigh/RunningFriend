@@ -5,6 +5,7 @@ include_once __DIR__ . '/register.php';
 include_once __DIR__ . '/Login.php';
 include_once __DIR__ . '/server.php';
 include_once __DIR__ . '/Appointment.php';
+include_once __DIR__ . '/Route.php';
 
 if (!isset($_REQUEST["params"])) {
     $response = array();
@@ -30,6 +31,12 @@ if ($params->type == "login") {
 
 if ($typearr[0] === "APPOINT") {
     $sv = new Appointment();
+    $sv->setRequest($params);
+    $sv->run();
+    echo json_encode($sv->getResponse());
+}
+if ($typearr[0] === "ROUTE") {
+    $sv = new Route();
     $sv->setRequest($params);
     $sv->run();
     echo json_encode($sv->getResponse());
