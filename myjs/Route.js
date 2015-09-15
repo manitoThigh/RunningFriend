@@ -689,7 +689,7 @@ window.RF.UI = window.RF.UI || {};
             		'	<div class="info-wrap">将此路线设为活动路线？</div> '+
             		'	<button class="btn-appoint-draw">确定</button>'+
             		'	<button class="btn-route-delete">删除</button>';
-            	
+            	infoWin.setTitle("活动路线");
             }
             else{
             	infoHtml=
@@ -710,7 +710,12 @@ window.RF.UI = window.RF.UI || {};
                 me.map.removeOverLay(infoWin);
             });
             $('.btn-route-save').unbind().click(function(){
-            	me.removeLineClick();
+            	var title=$(".route-name input").val();
+            	var note=$(".route-note textarea").val();
+            	me.saveRoute(title,note,function(){
+            		me.map.removeOverLay(infoWin);
+            		me.removeLineClick();
+            	});
             });
             $('.btn-route-delete').unbind().click(function(){
             	me.map.removeOverLay(infoWin);
@@ -722,7 +727,42 @@ window.RF.UI = window.RF.UI || {};
 		var me=this;
 		TEvent.removeListener(me.lineclick);
 	}
-
+	//保存路线并返回路线的id
+	Route.prototype.saveRoute = function(title,note,callback) {
+		var me = this;
+		var RouteId;
+		var title=title || null;
+		var note=note || null;
+		var fromPoint="POINT("+me.startposition.replace(","," ")+")";
+		var endPoint="POINT("+me.destposition.replace(","," ")+")";
+		var geom="MultiLineString(("+me.routelatlon.replace(/,/g," ").replace(/;/g,",").substring(0, me.routelatlon.length-1)+"))";
+		$.ajax({
+		    url: "php/Service.php",
+		    type: "post",
+		    data: {
+		        params: JSON.stringify({
+		            type: "ROUTE_SAVE",
+		            fromPoint:fromPoint,
+		            endPoint:endPoint,
+		            geom:geom,
+		            title:title,
+		            note:note
+		        })
+		    },
+		    success: function(data) {
+		        var obj = JSON.parse(data);
+		        if (obj.success) {
+		        	callback(obj.routeId);
+		        } else {
+		        	alert("操作失败")
+		        }
+		    },
+		    error: function(xhr, msg) {
+		        alert("false");
+		        alert(msg);
+		    }
+		});
+	};
 
 	if (typeof(module) !== 'undefined') {
 		module.exports = Route;

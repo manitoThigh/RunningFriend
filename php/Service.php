@@ -35,7 +35,7 @@ if ($typearr[0] === "APPOINT") {
     $sv->run();
     echo json_encode($sv->getResponse());
 }
-if ($typearr[0] === "ROUTE") {
+else if ($typearr[0] === "ROUTE") {
     $sv = new Route();
     $sv->setRequest($params);
     $sv->run();

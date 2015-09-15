@@ -11,7 +11,7 @@ window.RF.UI = window.RF.UI || {};
         }, opt);
         me.routeController=me.options.routeController;
         me.appointFriend=[];
-        me.route;
+        me.routeId;
     };
     //界面渲染
     Appoint.prototype.render = function() {
@@ -92,24 +92,16 @@ window.RF.UI = window.RF.UI || {};
     };
     //提交路线
     Appoint.prototype.summitRoute = function() {
+        var me=this;
         var time = $('#appoint-settime input').attr('value');
-        var friend = [];
-        var checks = $(".appoint-check");
-        var rid;
-        for (var i = 0; i < checks.length; i++) {
-            if (checks[i].checked) {
-                friend.push(checks.value);
-            }
+        var friend = me.appointFriend;
+        var rid = me.routeId;
+        // var myDate = new Date();
+        // var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
+        if(!rid){
+            alert("请绘制或选择路线后再提交活动！");
+            return;
         }
-        var newroute;
-        var type = $('input[name="routetype"]:checked').val();
-        if (type === 'draw') {} else {
-            rid = $('input[name="routetype"]:checked').val();
-        }
-        var myDate = new Date();
-        var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
-        $('#appoint-settime input').attr('value', nowdate);
-        $("#appoint_friend_list").html("");
         $.ajax({
             url: "php/Service.php",
             type: "post",
@@ -119,17 +111,19 @@ window.RF.UI = window.RF.UI || {};
                     type: "APPOINT_SUMMITAPPOINT",
                     friend: friend,
                     time: time,
-                    rtype: type,
                     rid: rid
                 })
             },
             success: function(data) {
                 var obj = JSON.parse(data);
                 if (obj.success) {
-                    var myDate = new Date();
-                    var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
-                    $('#appoint-settime input').attr('value', nowdate);
-                    $("#appoint_friend_list").html("");
+                    alert("活动创建成功");
+                    me.routeId="";
+                    me.routeController.infoShow=true;
+                    // var myDate = new Date();
+                    // var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
+                    // $('#appoint-settime input').attr('value', nowdate);
+                    // $("#appoint_friend_list").html("");
                 } else {}
             },
             error: function(xhr, msg) {
@@ -329,9 +323,11 @@ window.RF.UI = window.RF.UI || {};
         var me=this;
         me.routeController.infoShow=false;
         me.routeController.on("confirm",function(){
-            me.route=me.routeController.routelatlon;
-            console.log(me.route);
-            me.routeController.infoShow=true;
+            me.routeController.saveRoute("约跑路线","",function(routeId){
+                me.routeId=routeId;
+                me.routeController.infoShow=true;
+                console.log(me.routeId);
+            });
         });
     };
 

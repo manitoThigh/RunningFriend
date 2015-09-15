@@ -1,4 +1,6 @@
-﻿drop table userinformation;
+﻿drop table routeinformation;
+drop table userfriend;
+drop table userinformation;
 -- 包含用户信息的创建
 create table userinformation(
     uid serial primary key,
@@ -28,6 +30,8 @@ create table routeinformation(
 	endpoint geometry(Point),
 	geom geometry(MultiLineString),
 	createtime timestamp default now() ,
+	title varchar(50),
+	note text,
 	foreign key (createrid) references userinformation (uid)
 );
 

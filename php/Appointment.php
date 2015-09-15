@@ -59,16 +59,16 @@ class Appointment extends server {
             $this->makeresponse(false, pg_last_notice($this->_conn));
             return;
         }
+        $friend=array();
         if (pg_num_rows($result) > 0) {
-            $friend=array();
             $i=0;
            while ($row = pg_fetch_row($result)) {
                 $friend[$i]["name"]=$row[0];
                 $friend[$i]["id"]=$row[1];
                 $i++;
             }
-            $this->_response["friend"] = $friend;
         } 
+        $this->_response["friend"] = $friend;
         pg_free_result($result);
         $this->makeresponse(true, "ok");
         pg_query($this->_conn, "end");
@@ -131,12 +131,6 @@ class Appointment extends server {
         $aid;
         for($i=0;$i<count($this->_request->friend);$i++){
             $friendstring=$friendstring.$this->_request->friend[$i]." ";
-        }
-        if($this->_request->rtype=="draw"){
-            
-        }
-        else{
-            $rid=  $this->_request->rid;
         }
         $sql ="insert into appointmentinfo(createrid,routeid,appointtime,appointfriend)".
               "values($1,$2,$3,$4)";

@@ -38,7 +38,7 @@ and open the template in the editor.
 	line-height: 30px;
 	font-size: 20px;
 }
-.btn-appoint-draw,.btn-appoint-save{
+.btn-appoint-draw,.btn-route-save{
 	margin-left:20px;
 	margin-top: 5px;
 	background-color: #5bc0de;
@@ -47,7 +47,7 @@ and open the template in the editor.
 	border-radius: 5px;
 	
 }
-.btn-delete-draw{
+.btn-route-delete{
 	margin-right: 20px;
 	margin-top: 5px;
 	background-color: #fff;
