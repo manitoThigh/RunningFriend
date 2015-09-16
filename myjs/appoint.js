@@ -105,7 +105,6 @@ window.RF.UI = window.RF.UI || {};
         $.ajax({
             url: "php/Service.php",
             type: "post",
-            async: false,
             data: {
                 params: JSON.stringify({
                     type: "APPOINT_SUMMITAPPOINT",
@@ -205,7 +204,6 @@ window.RF.UI = window.RF.UI || {};
         $.ajax({
             url: "php/Service.php",
             type: "post",
-            async: false,
             data: {
                 params: JSON.stringify({
                     type: "APPOINT_GETROUTE"
@@ -274,7 +272,6 @@ window.RF.UI = window.RF.UI || {};
         $.ajax({
             url: "php/Service.php",
             type: "post",
-            async: false,
             data: {
                 params: JSON.stringify({
                     type: "APPOINT_GETROUTEGEOM",
