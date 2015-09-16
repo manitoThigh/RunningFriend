@@ -313,11 +313,11 @@ window.RF.UI = window.RF.UI || {};
 			me.routeLine(html);
 		}
 		//控制抽屉弹出，显示路径信息
-		//    if (!sideToggle.checked)
-		//    {
-		//        $("#sideToggle").trigger("click");
-		//    }
-		//    $('#content').replaceWith('<div id="content">' + html + '</div>');
+		    if (!sideToggle.checked)
+		    {
+		        $("#sideToggle").trigger("click");
+		    }
+		    $('#content').replaceWith('<div id="content">' + html + '</div>');
 
 		//这里把获得的路线存入数据库
 
