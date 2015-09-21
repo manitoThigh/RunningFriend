@@ -30,9 +30,9 @@ window.RF.UI = window.RF.UI || {};
 		me.counter = 0; //环圈路线规划的计数器
 		me.angel = 0; //环圈跑的角度计数  
 		me.runDistance = 0; //想跑的距离
-		me.infoShow=true;
+		me.infoShow = true; //是否在显示路线时显示侧边栏
 		me.lineclick;
-		me.events={};
+		me.events = {};
 		me.options = $.extend({
 			map: null
 		}, opt);
@@ -311,14 +311,13 @@ window.RF.UI = window.RF.UI || {};
 			html += "</div>";
 
 			me.routeLine(html);
-		}
-		//控制抽屉弹出，显示路径信息
-		    if (!sideToggle.checked)
-		    {
-		        $("#sideToggle").trigger("click");
-		    }
-		    $('#content').replaceWith('<div id="content">' + html + '</div>');
 
+			//控制抽屉弹出，显示路径信息
+			if (!sideToggle.checked) {
+				$("#sideToggle").trigger("click");
+			}
+			$('#content').replaceWith('<div id="content">' + html + '</div>');
+		}
 		//这里把获得的路线存入数据库
 
 		//显示路线 
@@ -326,9 +325,9 @@ window.RF.UI = window.RF.UI || {};
 	}
 
 	//在地图上显示路线。 
-	Route.prototype.showRouteLineFeature = function(routelatlon, startFeature, destFeature) {
+	Route.prototype.showRouteLineFeature = function(routelatlon, startFeature, destFeature, routeInfo) {
 		var me = this;
-
+		var routeInfo = arguments[3] ? arguments[3] : "";
 		var lonlats = routelatlon.split(";");
 		var lonlatsLength = lonlats.length;
 		var midFeatures = [];
@@ -353,7 +352,7 @@ window.RF.UI = window.RF.UI || {};
 			routeLine = new TPolyline(lineArr, style);
 		}
 		me.map.addOverLay(routeLine);
-		me.lineClick(routeLine);
+		me.lineClick(routeLine, routeInfo);
 		me.map.addOverLay(startFeature);
 		me.map.addOverLay(destFeature);
 		if (midFeatures.length > 0) {
@@ -625,9 +624,12 @@ window.RF.UI = window.RF.UI || {};
 
 	}
 	Route.prototype.on = function(evt, fn) {
-	        this.events[evt] = fn;
-	        return this;
-	    };
+		this.events[evt] = fn;
+		return this;
+	};
+	Route.prototype.off = function(evt) {
+		this.events[evt] = "";
+	};
 	Route.prototype.random = function() {
 		var me = this;
 
@@ -672,98 +674,185 @@ window.RF.UI = window.RF.UI || {};
 	}
 
 	Route.prototype.getDistance = function() {
+			var me = this;
+			me.runDistance = $("#rundistance").val();
+		}
+		//鼠标点击线事件
+	Route.prototype.lineClick = function(line, routeInfo) {
 		var me = this;
-		me.runDistance = $("#rundistance").val();
-	}
-	//鼠标点击线事件
-	Route.prototype.lineClick = function(line) {
-		var me=this;
-		me.removeLineClick();
+		var lineclick;
+		TEvent.removeListener(lineclick);
 		//注册线的点击事件
-        me.lineclick = TEvent.addListener(line,"click",function(p){
-        	var clickPoint=me.map.fromContainerPixelToLngLat(p);
-        	var infoWin=new TInfoWindow(clickPoint,new TPixel([0,-34]));
-        	var infoHtml;
-            if(!me.infoShow){
-            	infoHtml=
-            		'	<div class="info-wrap">将此路线设为活动路线？</div> '+
-            		'	<button class="btn-appoint-draw">确定</button>'+
-            		'	<button class="btn-route-delete">删除</button>';
-            	infoWin.setTitle("活动路线");
-            }
-            else{
-            	infoHtml=
-            	'<div class="info-body">'+
-            	'	<div class=route-name><span>名称</span><input type="text"/></div>'+
-            	'	<div class=route-note><span>备注</span><textarea></textarea></div>'+
-            	'	<button class="btn-route-save">保存</button>'+
-            	'	<button class="btn-route-delete">删除</button>';
-            	'</div>';
-            	infoWin.setTitle("保存路线");
-            }
-            infoWin.setLabel(infoHtml);
-            me.map.addOverLay(infoWin);
-            $('.btn-appoint-draw').unbind().click(function() {
-                if (me.events.confirm) {
-                    me.events.confirm.call(this);
-                }
-                me.map.removeOverLay(infoWin);
-            });
-            $('.btn-route-save').unbind().click(function(){
-            	var title=$(".route-name input").val();
-            	var note=$(".route-note textarea").val();
-            	me.saveRoute(title,note,function(){
-            		me.map.removeOverLay(infoWin);
-            		me.removeLineClick();
-            	});
-            });
-            $('.btn-route-delete').unbind().click(function(){
-            	me.map.removeOverLay(infoWin);
-            	me.clearAll();
-            });
-        });
-	};
-	Route.prototype.removeLineClick=function(){
-		var me=this;
-		TEvent.removeListener(me.lineclick);
-	}
-	//保存路线并返回路线的id
-	Route.prototype.saveRoute = function(title,note,callback) {
-		var me = this;
-		var RouteId;
-		var title=title || null;
-		var note=note || null;
-		var fromPoint="POINT("+me.startposition.replace(","," ")+")";
-		var endPoint="POINT("+me.destposition.replace(","," ")+")";
-		var geom="MultiLineString(("+me.routelatlon.replace(/,/g," ").replace(/;/g,",").substring(0, me.routelatlon.length-1)+"))";
-		$.ajax({
-		    url: "php/Service.php",
-		    type: "post",
-		    data: {
-		        params: JSON.stringify({
-		            type: "ROUTE_SAVE",
-		            fromPoint:fromPoint,
-		            endPoint:endPoint,
-		            geom:geom,
-		            title:title,
-		            note:note
-		        })
-		    },
-		    success: function(data) {
-		        var obj = JSON.parse(data);
-		        if (obj.success) {
-		        	callback(obj.routeId);
-		        } else {
-		        	alert("操作失败")
-		        }
-		    },
-		    error: function(xhr, msg) {
-		        alert("false");
-		        alert(msg);
-		    }
+		lineclick = TEvent.addListener(line, "click", function(p) {
+			var clickPoint = me.map.fromContainerPixelToLngLat(p);
+			var infoWin = new TInfoWindow(clickPoint, new TPixel([0, -34]));
+			if (me.events.lineClick) {
+				me.events.lineClick.call(this, infoWin, me.map, routeInfo);
+			} else {
+				var infoHtml =
+					'<div class="info-body">' +
+					'	<div class=route-name><span>名称</span><input type="text"/></div>' +
+					'	<div class=route-note><span>备注</span><textarea></textarea></div>' +
+					'	<button class="btn-route-save">保存</button>' +
+					'	<button class="btn-route-delete">删除</button>';
+				'</div>';
+				infoWin.setTitle("保存路线");
+				infoWin.setLabel(infoHtml);
+				me.map.addOverLay(infoWin);
+			}
+			$('.btn-appoint-draw').unbind().click(function() {
+				if (me.events.confirm) {
+					me.events.confirm.call(this);
+				}
+				me.map.removeOverLay(infoWin);
+			});
+			$('.btn-route-save').unbind().click(function() {
+				var title = $(".route-name input").val();
+				var note = $(".route-note textarea").val();
+				me.saveRoute(title, note, function() {
+					me.map.removeOverLay(infoWin);
+					me.removeLineClick();
+				});
+			});
+			$('.btn-route-delete').unbind().click(function() {
+				me.map.removeOverLay(infoWin);
+				me.clearAll();
+			});
 		});
 	};
-
+	//保存路线并返回路线的id
+	Route.prototype.saveRoute = function(title, note, callback) {
+		var me = this;
+		var RouteId;
+		var title = title || null;
+		var note = note || null;
+		var fromPoint = "POINT(" + me.startposition.replace(",", " ") + ")";
+		var endPoint = "POINT(" + me.destposition.replace(",", " ") + ")";
+		var geom = "MultiLineString((" + me.routelatlon.replace(/,/g, " ").replace(/;/g, ",").substring(0, me.routelatlon.length - 1) + "))";
+		$.ajax({
+			url: "php/Service.php",
+			type: "post",
+			data: {
+				params: JSON.stringify({
+					type: "ROUTE_SAVE",
+					fromPoint: fromPoint,
+					endPoint: endPoint,
+					geom: geom,
+					title: title,
+					note: note
+				})
+			},
+			success: function(data) {
+				var obj = JSON.parse(data);
+				if (obj.success) {
+					callback(obj.routeId);
+				} else {
+					alert("操作失败")
+				}
+			},
+			error: function(xhr, msg) {
+				alert("false");
+				alert(msg);
+			}
+		});
+	};
+	//获取存储的路线列表
+	Route.prototype.getRouteList = function() {
+		var me = this;
+		me.clearAll();
+		$.ajax({
+			url: "php/Service.php",
+			type: "post",
+			data: {
+				params: JSON.stringify({
+					type: "ROUTE_GETROUTE"
+				})
+			},
+			success: function(data) {
+				var obj = JSON.parse(data);
+				if (obj.success) {
+					for (var i = 0, l = obj.route.length; i < l; i++) {
+						var route = obj.route[i];
+						var startPoint = me.pointToPoint(route.frompoint);
+						startPoint = me.createFeature(startPoint, "start");
+						var endPoint = me.pointToPoint(route.endpoint);
+						endPoint = me.createFeature(endPoint, "dest");
+						var lineGeom = me.lineToLine(route.geom);
+						routeInfo = {
+							'title': route.title,
+							'createtime': route.createtime,
+							'note': route.note,
+							'rid': route.rid
+						};
+						me.showRouteLineFeature(lineGeom, startPoint, endPoint, routeInfo);
+					}
+				} else {}
+			},
+			error: function(xhr, msg) {
+				alert("false");
+				alert(msg);
+			}
+		});
+	};
+	//通过ID获取路线
+	Route.prototype.getRouteById = function(rid) {
+		var me = this;
+		me.clearAll();
+		$.ajax({
+			url: "php/Service.php",
+			type: "post",
+			data: {
+				params: JSON.stringify({
+					type: "ROUTE_GETROUTEBYID",
+					rid: rid
+				})
+			},
+			success: function(data) {
+				var obj = JSON.parse(data);
+				if (obj.success) {
+					if (obj.route) {
+						var route = obj.route;
+						var startPoint = me.pointToPoint(route.frompoint);
+						startPoint = me.createFeature(startPoint, "start");
+						var endPoint = me.pointToPoint(route.endpoint);
+						endPoint = me.createFeature(endPoint, "dest");
+						var lineGeom = me.lineToLine(route.geom);
+						routeInfo = {
+							'title': route.title,
+							'createtime': route.createtime,
+							'note': route.note,
+							'rid': route.rid
+						};
+						me.showRouteLineFeature(lineGeom, startPoint, endPoint, routeInfo);
+						me.on("lineClick", function(infoWin, map, routeInfo) {
+							var infoHtml =
+								'<div class="info-body" data-id="' + routeInfo.rid + '">' +
+								'   <div class=route-name><span>名称:</span><div class="route-info">' + routeInfo.title + '</div></div>' +
+								'   <div class=route-time><span>创建时间:</span><div class="route-info">' + routeInfo.createtime + '</div></div>' +
+								'   <div class=route-note><span>备注</span><div class="route-info">' + routeInfo.note + '</div></div>' +
+								'</div>';
+							infoWin.setTitle("活动路线");
+							infoWin.setLabel(infoHtml);
+							map.addOverLay(infoWin);
+						});
+					}
+				} else {}
+			},
+			error: function(xhr, msg) {
+				alert("false");
+				alert(msg);
+			}
+		});
+	};
+	Route.prototype.pointToPoint = function(point) {
+		var Tpoint = point.slice(6, -2).replace(" ", ",");
+		return Tpoint;
+	};
+	Route.prototype.lineToLine = function(line) {
+		var linestring = line.slice(17, -2).replace(/,/g, ";").replace(/\s/g, ",");
+		linestring += ";";
+		return linestring;
+	};
 	if (typeof(module) !== 'undefined') {
 		module.exports = Route;
 	} else {

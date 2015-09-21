@@ -7,10 +7,10 @@ window.RF.UI = window.RF.UI || {};
     var Appoint = function(opt) {
         var me = this;
         me.options = $.extend({
-            routeController:null
+            routeController: null
         }, opt);
-        me.routeController=me.options.routeController;
-        me.appointFriend=[];
+        me.routeController = me.options.routeController;
+        me.appointFriend = [];
         me.routeId;
     };
     //界面渲染
@@ -88,17 +88,43 @@ window.RF.UI = window.RF.UI || {};
         $("#appoint_drawroute").click(function() {
             me.appointDrawRoute();
         });
-        // me.getroutelist();
+        //获取历史路线
+        $("#appoint_selectroute").click(function() {
+            me.selectRoute();
+        });
+    };
+    //选择路线
+    Appoint.prototype.selectRoute = function() {
+        var me = this;
+        me.routeController.getRouteList();
+        me.routeController.on("lineClick",function(infoWin,map,routeInfo){
+            var infoHtml =
+                '<div class="info-body" data-id="'+routeInfo.rid+'">'+
+                '   <div class=route-name><span>名称:</span><div class="route-info">'+routeInfo.title+'</div></div>'+
+                '   <div class=route-time><span>创建时间:</span><div class="route-info">'+routeInfo.createtime+'</div></div>'+
+                '   <div class=route-note><span>备注</span><div class="route-info">'+routeInfo.note+'</div></div>'+
+                '   <button class="btn-route-select">确定</button>'+
+                '</div>';
+            infoWin.setTitle("活动路线");
+            infoWin.setLabel(infoHtml);
+            map.addOverLay(infoWin);
+            $(".btn-route-select").click(function(){
+                me.routeId=$(this).parents('.info-body').data('id');
+                me.routeController.off("lineClick");
+                me.routeController.getRouteById(me.routeId);
+            });
+        });
+        
     };
     //提交路线
     Appoint.prototype.summitRoute = function() {
-        var me=this;
+        var me = this;
         var time = $('#appoint-settime input').attr('value');
         var friend = me.appointFriend;
         var rid = me.routeId;
         // var myDate = new Date();
         // var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
-        if(!rid){
+        if (!rid) {
             alert("请绘制或选择路线后再提交活动！");
             return;
         }
@@ -117,12 +143,9 @@ window.RF.UI = window.RF.UI || {};
                 var obj = JSON.parse(data);
                 if (obj.success) {
                     alert("活动创建成功");
-                    me.routeId="";
-                    me.routeController.infoShow=true;
-                    // var myDate = new Date();
-                    // var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
-                    // $('#appoint-settime input').attr('value', nowdate);
-                    // $("#appoint_friend_list").html("");
+                    me.routeId = "";
+                    me.routeController.infoShow = true;
+                    me.routeController.off("lineClick");
                 } else {}
             },
             error: function(xhr, msg) {
@@ -189,117 +212,13 @@ window.RF.UI = window.RF.UI || {};
                 alert(msg);
             }
         });
-        $("#FriendModal .btn-friend-choice").click(function(){
-            $("[name='appoint-friend']:checked").each(function(){
+        $("#FriendModal .btn-friend-choice").click(function() {
+            $("[name='appoint-friend']:checked").each(function() {
                 me.appointFriend.push($(this).data("friend-id"));
             });
             $('#FriendModal').modal('hide');
         });
-
     };
-    Appoint.prototype.getroutelist = function() {
-        var me = this;
-        var response;
-        var responselength;
-        $.ajax({
-            url: "php/Service.php",
-            type: "post",
-            data: {
-                params: JSON.stringify({
-                    type: "APPOINT_GETROUTE"
-                })
-            },
-            success: function(data) {
-                var obj = JSON.parse(data);
-                if (obj.success) {
-                    response = obj.route;
-                    responselength = obj.datalength;
-                } else {}
-            },
-            error: function(xhr, msg) {
-                alert("false");
-                alert(msg);
-            }
-        });
-        var html =
-            '<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">';
-        /*'             <thead>' +
-         '                      <tr>' +
-         '                          <th>&nbsp</th>' +
-         '                          <th>时间</th>' +
-         '                          <th>查看</th>' +
-         '                      </tr>' +
-         '                  </thead>' +
-         '                  <tbody>';*/
-
-        for (i = 0; i < response.length; i++) {
-            html +=
-                '   <div class="panel panel-default">' +
-                '       <div class="panel-heading" role="tab" id="heading' + response[i].id + '">' +
-                '           <h4 class="panel-title">' +
-                '               <a class="collapsed" role="button" data-toggle="collapse" data-parent="#accordion" href="#collapse' + response[i].id + '" aria-expanded="false" aria-controls="collapse' + response[i].id + '">' +
-                '                   第 ' + response[i].id + ' 条' +
-                '               </a>' +
-                '           </h4>' +
-                '       </div>' +
-                '       <div id="collapse' + response[i].id + '" class="panel-collapse collapse" role="tabpanel" aria-labelledby="heading' + response[i].id + '">' +
-                '           <div class="panel-body">' +
-                '               sdgaw' +
-                '           </div>' +
-                '       </div>' +
-                '   </div>';
-            /*'<tr>' +
-             '<td class="typhooncheck"><input class="appoint-check" type="radio" name="routeradio" value=' + response[i].id + ' /></td>' +
-             '<td>' + response[i].timing + '</td>' +
-             '<td><button class="btn btn-default" id="route_' + response[i].id + '" >查看</button></td>' +
-             '</tr>';*/
-            $("#heading" + response[i].id).click(function() {
-                me.drawroute(response[i].id);
-            });
-        }
-        html +=
-            '</div>';
-        /*html +=
-         '</tbody>';*/
-        $("#appoint-history-route").html(html);
-        //$('#accordion').collapse('show');
-        $('#accordion').on('shown.bs.collapse', function() {
-            //添加响应事件
-        });
-    };
-    Appoint.prototype.drawroute = function(id) {
-        var me = this;
-        $.ajax({
-            url: "php/Service.php",
-            type: "post",
-            data: {
-                params: JSON.stringify({
-                    type: "APPOINT_GETROUTEGEOM",
-                    rid: id
-                })
-            },
-            success: function(data) {
-                var obj = JSON.parse(data);
-                if (obj.success) {
-                    var points = me.LineTOPointArray(obj.geom);
-                    var line = new TPolyline(points, {
-                        strokeColor: "red",
-                        strokeWeight: 1,
-                        strokeOpacity: 1,
-                        strokeStyle: "dashed"
-                    });
-                    me.mapcontrol.addOverLay(line);
-                    var centerpoint = me.PointToPoint(obj.centerpoint);
-                    me.mapcontrol.centerAndZoom(centerpoint, 14);
-                } else {}
-            },
-            error: function(xhr, msg) {
-                alert("false");
-                alert(msg);
-            }
-        });
-    };
-
     Appoint.prototype.LineTOPointArray = function(linestring) {
         var Points = [];
         var line = linestring.slice(17, -2);
@@ -317,12 +236,22 @@ window.RF.UI = window.RF.UI || {};
         return Tpoint;
     };
     Appoint.prototype.appointDrawRoute = function() {
-        var me=this;
-        me.routeController.infoShow=false;
-        me.routeController.on("confirm",function(){
-            me.routeController.saveRoute("约跑路线","",function(routeId){
-                me.routeId=routeId;
-                me.routeController.infoShow=true;
+        var me = this;
+        me.routeController.infoShow = false;
+        me.routeController.on("lineClick", function(infoWin,map) {
+            var infoHtml =
+                '   <div class="info-wrap">将此路线设为活动路线？</div> ' +
+                '   <button class="btn-appoint-draw">确定</button>' +
+                '   <button class="btn-route-delete">删除</button>';
+            infoWin.setTitle("活动路线");
+            infoWin.setLabel(infoHtml);
+            map.addOverLay(infoWin);
+        });
+        me.routeController.on("confirm", function() {
+            me.routeController.saveRoute("约跑路线", "", function(routeId) {
+                me.routeId = routeId;
+                me.routeController.infoShow = true;
+                me.routeController.off("lineClick");
                 console.log(me.routeId);
             });
         });

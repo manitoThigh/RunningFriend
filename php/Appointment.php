@@ -100,30 +100,6 @@ class Appointment extends server {
         $this->makeresponse(true, "ok");
         pg_query($this->_conn, "end");
     }
-    private function getroutegeom() {
-        pg_query($this->_conn, "begin");
-        $sql = "select ST_AsText(frompoint),ST_AsText(endpoint),ST_AsText(geom), ST_AsText(ST_Centroid(geom)) from routeinformation where rid=$1";
-        $result = pg_query_params($this->_conn, $sql, array(
-        $this->_request->rid
-        ));
-        if (!$result) {
-            $this->makeresponse(false, pg_last_notice($this->_conn));
-            return;
-        }
-        if (pg_num_rows($result) > 0) {
-            $row = pg_fetch_row($result);
-            $this->_response["frompoint"] = $row[0];
-            $this->_response["endpoint"]=$row[1];
-            $this->_response["geom"]=$row[2];
-            $this->_response["centerpoint"]=$row[3];
-            $this->_response["datalength"] = "1";
-        } else {
-            $this->_response["datalength"] = "0";
-        }
-        pg_free_result($result);
-        $this->makeresponse(true, "ok");
-        pg_query($this->_conn, "end");
-    }
     private function  summitappoint(){
         pg_query($this->_conn, "begin");
         $friendstring="";

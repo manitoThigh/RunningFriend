@@ -38,14 +38,19 @@ and open the template in the editor.
 	line-height: 30px;
 	font-size: 20px;
 }
-.btn-appoint-draw,.btn-route-save{
+.btn-appoint-draw,.btn-route-save,.btn-route-select{
 	margin-left:20px;
 	margin-top: 5px;
 	background-color: #5bc0de;
 	border:1px solid #46b8da;
 	color:#fff;
-	border-radius: 5px;
-	
+	border-radius: 5px;	
+}
+.btn-route-select{
+	width: 50px;
+	text-align: center;
+	float: right;
+	margin-right: 20px;
 }
 .btn-route-delete{
 	margin-right: 20px;
@@ -60,9 +65,10 @@ and open the template in the editor.
 	display: flex;
 	width: 100%;
 }
-.info-body .route-name span,.info-body .route-note span{
+.info-body .route-name span,.info-body .route-note span,.route-time span{
 	font-size: 16px;
 	width: 40px;
+	color:#999;
 }
 .info-body .route-name input{
 	flex: 1;
@@ -74,4 +80,11 @@ and open the template in the editor.
 	width: 200px;
 	height: 75px;
 	resize: none;
+}
+.info-body div.route-info{
+	float: left;
+	line-height: 25px;
+	font-size: 16px;
+	color: #666;
+	width:200px;
 }

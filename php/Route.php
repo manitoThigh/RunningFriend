@@ -23,6 +23,10 @@ class Route extends server {
         }
         if ($this->_request->type === "ROUTE_SAVE") {
             $this->saveRoute();
+        }if ($this->_request->type === "ROUTE_GETROUTE") {
+            $this->getRoute();
+        }if ($this->_request->type === "ROUTE_GETROUTEBYID") {
+            $this->getRouteById();
         } else {
             
         }
@@ -52,6 +56,62 @@ class Route extends server {
             $row = pg_fetch_row($result1);
             $this->_response["routeId"] = $row[0];
         }
+        $this->makeresponse(true, "ok");
+        pg_query($this->_conn, "end");
+    }
+    private function getRoute(){
+        pg_query($this->_conn, "begin");
+        $sql = "select rid,ST_AsText(frompoint),ST_AsText(endpoint),ST_AsText(geom),createtime,title,note from routeinformation where createrid=$1";
+        $result = pg_query_params($this->_conn, $sql, array(
+            $_SESSION[userid]
+        ));
+        if (!$result) {
+            $this->makeresponse(false, pg_last_notice($this->_conn));
+            return;
+        }
+        $route=array();
+        if (pg_num_rows($result) > 0) {
+            $i=0;
+           while ($row = pg_fetch_row($result)) {
+                $route[$i]["rid"]=$row[0];
+                $route[$i]["frompoint"]=$row[1];
+                $route[$i]["endpoint"]=$row[2];
+                $route[$i]["geom"]=$row[3];
+                $route[$i]["createtime"]=$row[4];
+                $route[$i]["title"]=$row[5];
+                $route[$i]["note"]=$row[6];
+                $i++;
+            }  
+        }
+        $this->_response["route"] = $route;
+        pg_free_result($result);
+        $this->makeresponse(true, "ok");
+        pg_query($this->_conn, "end");
+    }
+    private function getRouteById(){
+        pg_query($this->_conn, "begin");
+        $sql = "select rid,ST_AsText(frompoint),ST_AsText(endpoint),ST_AsText(geom),createtime,title,note from routeinformation where createrid=$1 and rid=$2";
+        $result = pg_query_params($this->_conn, $sql, array(
+            $_SESSION[userid],$this->_request->rid
+        ));
+        if (!$result) {
+            $this->makeresponse(false, pg_last_notice($this->_conn));
+            return;
+        }
+        $route;
+        if (pg_num_rows($result) > 0) {
+            $row = pg_fetch_row($result);
+            $route["rid"]=$row[0];
+            $route["frompoint"]=$row[1];
+            $route["endpoint"]=$row[2];
+            $route["geom"]=$row[3];
+            $route["createtime"]=$row[4];
+            $route["title"]=$row[5];
+            $route["note"]=$row[6];
+            $i++; 
+        }
+        $this->_response["route"] = $route;
+        pg_free_result($result);
         $this->makeresponse(true, "ok");
         pg_query($this->_conn, "end");
     }
