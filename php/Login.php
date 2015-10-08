@@ -1,6 +1,6 @@
 <?php
-
-class Login {
+include_once __DIR__ . '\server.php';
+class Login extends server{
 
     protected $_connection = false;
     protected $_loginInfo = false;
@@ -9,8 +9,11 @@ class Login {
     protected $_message = false;
     protected $_flagStr = false;
     protected $_userName = false;
-
+    public function __destruct() {
+        parent::__destruct();
+    }
     public function __construct($conn, $loginInfo) {
+        parent::__construct();
         $this->_connection = $conn;
         $this->_loginInfo = $loginInfo;
         $this->_success = false;
@@ -55,16 +58,20 @@ class Login {
             return false;
         } else {
             $this->_success = true;
+            $row = pg_fetch_row($result);
             return true;
         }
     }
 
     public function GetName() {
-        $sql = "select uname from userinformation where umail ='" .
+        $sql = "select uname,uid from userinformation where umail ='" .
                 $this->_loginInfo->useremail."'";
         $result = pg_query($sql);
         $arr = pg_fetch_all($result);
-        $this->_userName = $arr[0]['uname'];
+        $_SESSION["username"]=$arr[0]['uname'];
+        $_SESSION["userid"]=$arr[0]['uid'];
+        $this->_userName = $_SESSION["username"];
+        $this->_user= $_SESSION["userid"];
     }
 
     public function SetMyCookie() {
@@ -88,7 +95,8 @@ class Login {
     public function MakeResponse() {
         $reponse = array('success'=>  $this->_success,
                          'message'=>  $this->_message,
-                         'username'=> $this->_userName
+                         'username'=> $this->_userName,
+                         'user'=>  $this->_user
                         );
         echo json_encode($reponse);
     }

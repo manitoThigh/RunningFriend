@@ -1,6 +1,6 @@
 (function($) {
-    define(['myjs/LoginDialog', 'myjs/RegistDialog', 'myjs/mapcontrol', 'myjs/Route', 'myjs/appoint', 'myjs/DisplayRegularPlace'],
-        function(Login, Regist, MapControl, Route, Appoint, DisRegularPlace) {
+    define(['myjs/LoginDialog', 'myjs/RegistDialog', 'myjs/mapcontrol', 'myjs/Route', 'myjs/appoint', 'myjs/DisplayRegularPlace','myjs/checkappoint.js'],
+        function(Login, Regist, MapControl, Route, Appoint, DisRegularPlace,CheckAppoint) {
             var initEvent = function() {
                 //关于我们
                 $("#aboutus").click(function() {
@@ -86,12 +86,19 @@
 
                 //发起跑步
                 var appoint = new Appoint({
-                        routeController:route
-                    });
+                    routeController:route
+                });
                 $("#yuepao").click(function() {
                     appoint.render();
                 });
 
+                //我的跑步活动
+                var checkappoint = new CheckAppoint({
+                    routeController:route
+                });
+                $("#appointment").click(function(){
+                    checkappoint.render();
+                });
 
 
             };

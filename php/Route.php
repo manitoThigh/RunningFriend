@@ -15,8 +15,6 @@ class Route extends server {
     public function run() {
         parent::run();
         $this->_conn = getConnection();
-        $_SESSION["userid"] = 1;
-        $_SESSION["username"] = "a1";
         if (!$this->_conn) {
             $this->makeresponse(false, "can not connect the db sever!");
             return;
@@ -90,9 +88,9 @@ class Route extends server {
     }
     private function getRouteById(){
         pg_query($this->_conn, "begin");
-        $sql = "select rid,ST_AsText(frompoint),ST_AsText(endpoint),ST_AsText(geom),createtime,title,note from routeinformation where createrid=$1 and rid=$2";
+        $sql = "select rid,ST_AsText(frompoint),ST_AsText(endpoint),ST_AsText(geom),createtime,title,note from routeinformation where rid=$1";
         $result = pg_query_params($this->_conn, $sql, array(
-            $_SESSION[userid],$this->_request->rid
+            $this->_request->rid
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));

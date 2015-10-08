@@ -1,6 +1,8 @@
 ﻿drop table routeinformation;
 drop table userfriend;
 drop table userinformation;
+drop table appointfriendState;
+drop table appointmentinfo;
 -- 包含用户信息的创建
 create table userinformation(
     uid serial primary key,

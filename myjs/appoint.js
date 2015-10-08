@@ -119,11 +119,9 @@ window.RF.UI = window.RF.UI || {};
     //提交路线
     Appoint.prototype.summitRoute = function() {
         var me = this;
-        var time = $('#appoint-settime input').attr('value');
+        var time = $('#appoint-settime input').val();
         var friend = me.appointFriend;
         var rid = me.routeId;
-        // var myDate = new Date();
-        // var nowdate = myDate.getFullYear() + "-" + (parseInt(myDate.getMonth()) + 1) + "-" + myDate.getDate() + " " + myDate.getHours() + ":" + myDate.getMinutes();
         if (!rid) {
             alert("请绘制或选择路线后再提交活动！");
             return;
@@ -144,6 +142,7 @@ window.RF.UI = window.RF.UI || {};
                 if (obj.success) {
                     alert("活动创建成功");
                     me.routeId = "";
+                    me.appointFriend=[];
                     me.routeController.infoShow = true;
                     me.routeController.off("lineClick");
                 } else {}
@@ -193,6 +192,13 @@ window.RF.UI = window.RF.UI || {};
                             '  </div><!-- /.modal-dialog -->' +
                             '</div><!-- /.modal -->';
                         $(html).appendTo($("body"));
+                        $("#FriendModal .btn-friend-choice").click(function() {
+                            me.appointFriend=[];
+                            $("[name='appoint-friend']:checked").each(function() {
+                                me.appointFriend.push($(this).data("friend-id"));
+                            });
+                            $('#FriendModal').modal('hide');
+                        });
                     }
                     var html = "";
                     for (i = 0; i < obj.friend.length; i++) {
@@ -212,29 +218,8 @@ window.RF.UI = window.RF.UI || {};
                 alert(msg);
             }
         });
-        $("#FriendModal .btn-friend-choice").click(function() {
-            $("[name='appoint-friend']:checked").each(function() {
-                me.appointFriend.push($(this).data("friend-id"));
-            });
-            $('#FriendModal').modal('hide');
-        });
     };
-    Appoint.prototype.LineTOPointArray = function(linestring) {
-        var Points = [];
-        var line = linestring.slice(17, -2);
-        var pointstring = line.split(",");
-        for (var i = 0; i < pointstring.length; i++) {
-            var point = pointstring[i].split(" ");
-            Points.push(new TLngLat(parseFloat(point[0]), parseFloat(point[1])));
-        }
-        return Points;
-    };
-    Appoint.prototype.PointToPoint = function(point) {
-        var Tpoint;
-        var xy = point.slice(6, -2).split(" ");
-        Tpoint = new TLngLat(parseFloat(xy[0]), parseFloat(xy[1]))
-        return Tpoint;
-    };
+    //绘制路线
     Appoint.prototype.appointDrawRoute = function() {
         var me = this;
         me.routeController.infoShow = false;

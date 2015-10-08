@@ -14,10 +14,13 @@ class Appointment extends server {
     public function run() {
         parent::run();
         $this->_conn = getConnection();
-        $_SESSION["userid"]=1;
-        $_SESSION["username"]="a1";
         if (!$this->_conn) {
             $this->makeresponse(false, "can not connect the db sever!");
+            return;
+        }
+        $this->_response['user']=$_SESSION["username"];
+        if(!$_SESSION["username"]){
+            $this->makeresponse(false, "login in first please!");
             return;
         }
         if($this->_request->type === "APPOINT_GETFRIEND"){
@@ -53,7 +56,7 @@ class Appointment extends server {
         pg_query($this->_conn, "begin");
         $sql = "select a.uname ,a.uid from userinformation a,userfriend b where b.uid=$1 and b.fid=a.uid";
         $result = pg_query_params($this->_conn, $sql, array(
-            $_SESSION[userid]
+            $_SESSION["userid"]
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -77,7 +80,7 @@ class Appointment extends server {
         pg_query($this->_conn, "begin");
         $sql = "select rid,createtime from routeinformation where createrid=$1";
         $result = pg_query_params($this->_conn, $sql, array(
-            $_SESSION[userid]
+            $_SESSION["userid"]
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -112,7 +115,7 @@ class Appointment extends server {
               "values($1,$2,$3,$4)";
               
         $result = pg_query_params($this->_conn, $sql, array(
-            $_SESSION[userid],  $rid,  $this->_request->time,  $friendstring
+            $_SESSION["userid"],  $this->_request->rid,  $this->_request->time,  $friendstring
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -152,7 +155,7 @@ class Appointment extends server {
                 "from appointmentinfo a,appointfriendState c ,userinformation d ".
                 "where c.friendid=$1 and c.state=0 and c.appid=a.aid and a.createrid=d.uid";
         $result = pg_query_params($this->_conn, $sql, array(
-        $_SESSION[userid]
+        $_SESSION["userid"]
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -203,7 +206,7 @@ class Appointment extends server {
                 "set state=$3 ".
                 "where appid=$1 and friendid=$2";
         $result = pg_query_params($this->_conn, $sql, array(
-        $this->_request->id ,$_SESSION[userid],  $this->_request->state
+        $this->_request->id ,$_SESSION["userid"],  $this->_request->state
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -219,7 +222,7 @@ class Appointment extends server {
                 "from appointmentinfo a,appointfriendState c ,userinformation d ".
                 "where c.friendid=$1 and c.state=1 and c.appid=a.aid  and a.createrid=d.uid and appointtime>now()";
         $result = pg_query_params($this->_conn, $sql, array(
-        $_SESSION[userid]
+        $_SESSION["userid"]
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -268,7 +271,7 @@ class Appointment extends server {
         pg_query($this->_conn, "begin");
         $sql = "select * from appointmentinfo where createrid=$1";
         $result = pg_query_params($this->_conn, $sql, array(
-        $_SESSION[userid]
+        $_SESSION["userid"]
         ));
         if (!$result) {
             $this->makeresponse(false, pg_last_notice($this->_conn));
@@ -282,7 +285,7 @@ class Appointment extends server {
                 $data[$i]['routeid']=$row[2];
                 $data[$i]['time']=$row[3];
                 $data[$i]['friend']=array();
-                $sql1 = "select b.uname ,a.state from appointfriendState a,userinformation b ".
+                $sql1 = "select DISTINCT b.uname ,a.state from appointfriendState a,userinformation b ".
                         "where a.friendid=b.uid and b.uid in (select friendid from appointfriendState where appid=$1)";
                 $result1 = pg_query_params($this->_conn, $sql1, array(
                     $row[0]

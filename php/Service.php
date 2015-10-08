@@ -20,8 +20,8 @@ $typearr = split("_", $params->type);
 $connection = getConnection();
 $sv = new server();
 if ($params->type == "register") {
-    $runObj = new Register($connection, $params->user);
-    $runObj->Run();
+    $sv = new Register($connection, $params->user);
+    $sv ->Run();
 }
 
 if ($params->type == "login") {

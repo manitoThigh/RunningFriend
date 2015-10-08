@@ -88,3 +88,34 @@ and open the template in the editor.
 	color: #666;
 	width:200px;
 }
+a{
+	text-decoration: none;
+}
+a:hover{
+	text-decoration: none;
+}
+#check-appoint .panel-body{
+	padding: 5px;
+}
+#check-appoint .originate-header{
+	float: left;
+	color: #999;
+}
+#check-appoint .originate-context{
+	float: left;
+	color: #666;
+}
+#check-appoint  .originate-body{
+	overflow: hidden;
+	padding-bottom: 10px;
+}
+#check-appoint .invite-route{
+	cursor: pointer;
+}
+#check-appoint .overdue-shelter{
+	color:red;
+}
+.invite-contain{
+	padding-bottom: 10px;
+	border-bottom: 1px solid #ccc;
+}
