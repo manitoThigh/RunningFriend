@@ -19,25 +19,7 @@
                     $('#content').replaceWith(me.html);
                 });
 
-                //自定义路线侧边栏
-                $("#diy-road").click(function() {
-                    if (!sideToggle.checked) {
-                        $("#sideToggle").trigger("click");
-                    }
-                    var html =
-                        '<div id="content">' +
-                        '<div id="makeroute">' +
-                        '<h3>自定义路线</h3>' +
-                        '   <h4>使用方法：</h4>' +
-                        '   <h4>1、在地图中使用点击右键选择设定起点</h4>' +
-                        '   <h4>2、选择跑步模式</h4>' +
-                        '   <h4>3、环圈跑和往返跑不需要设定终点。其他请自定义终点</h4>' +
-                        '   <h4>4、点击规划路线按钮，完成路线设计</h4>' +
-                        '<h3>输入跑步路程</h3>' +
-                        '<input type="text" id = "rundistance"  placeholder = "距离" style="color:#000;" />' +
-                        '</div>' + '</div>';
-                    $('#content').replaceWith(html);
-                });
+                
 
                 //登录对话框显示
                 //var login = new Login();
@@ -68,7 +50,26 @@
                     map: map.map
                 });
                 route.rightclick();
-
+                //自定义路线侧边栏
+                $("#diy-road").click(function() {
+                    if (!sideToggle.checked) {
+                        $("#sideToggle").trigger("click");
+                    }
+                    var html =
+                        '<div id="content">' +
+                        '<div id="makeroute">' +
+                        '<h3>自定义路线</h3>' +
+                        '   <h4>使用方法：</h4>' +
+                        '   <h4>1、在地图中使用点击右键选择设定起点</h4>' +
+                        '   <h4>2、选择跑步模式</h4>' +
+                        '   <h4>3、环圈跑和往返跑不需要设定终点。其他请自定义终点</h4>' +
+                        '   <h4>4、点击规划路线按钮，完成路线设计</h4>' +
+                        '<h3>输入跑步路程</h3>' +
+                        '<input type="text" id = "rundistance"  placeholder = "距离" style="color:#000;" />' +
+                        '</div>' + '</div>';
+                    $('#content').replaceWith(html);
+                    route.off();
+                });
                 //跑步圣地
                 var palace;
                 var palaceHasShow = false;

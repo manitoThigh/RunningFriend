@@ -786,7 +786,7 @@ window.RF.UI = window.RF.UI || {};
 						};
 						me.showRouteLineFeature(lineGeom, startPoint, endPoint, routeInfo);
 					}
-				} else {}
+				} else {alert(obj.errmsg);}
 			},
 			error: function(xhr, msg) {
 				alert("false");
@@ -836,7 +836,7 @@ window.RF.UI = window.RF.UI || {};
 							map.addOverLay(infoWin);
 						});
 					}
-				} else {}
+				} else {alert(obj.errmsg);}
 			},
 			error: function(xhr, msg) {
 				alert("false");

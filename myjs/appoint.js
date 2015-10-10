@@ -145,7 +145,7 @@ window.RF.UI = window.RF.UI || {};
                     me.appointFriend=[];
                     me.routeController.infoShow = true;
                     me.routeController.off("lineClick");
-                } else {}
+                } else {alert(obj.errmsg);}
             },
             error: function(xhr, msg) {
                 alert("false");
@@ -211,7 +211,7 @@ window.RF.UI = window.RF.UI || {};
                     }
                     $("#FriendModal .input-group").html(html);
                     $('#FriendModal').modal('show');
-                } else {}
+                } else {alert(obj.errmsg);}
             },
             error: function(xhr, msg) {
                 alert("false");

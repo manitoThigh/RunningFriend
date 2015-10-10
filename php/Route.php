@@ -19,6 +19,11 @@ class Route extends server {
             $this->makeresponse(false, "can not connect the db sever!");
             return;
         }
+        $this->_response['user']=$_SESSION["username"];
+        if(!$_SESSION["username"]){
+            $this->makeresponse(false, "login in first please!");
+            return;
+        }
         if ($this->_request->type === "ROUTE_SAVE") {
             $this->saveRoute();
         }if ($this->_request->type === "ROUTE_GETROUTE") {

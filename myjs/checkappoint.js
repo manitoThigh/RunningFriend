@@ -96,7 +96,8 @@ window.RF.UI = window.RF.UI || {};
                             '<div>暂无邀请</div>';
                         $("#invite-body").html(html);
                     }
-                } else {}
+                } else {
+                }
             },
             error: function(xhr, msg) {
                 alert("false");
@@ -196,7 +197,7 @@ window.RF.UI = window.RF.UI || {};
                             '<div>暂无参加</div>';
                         $("#attend-body").html(html);
                     }
-                } else {}
+                } else {alert(obj.errmsg);}
             },
             error: function(xhr, msg) {
                 alert("false");
@@ -259,7 +260,7 @@ window.RF.UI = window.RF.UI || {};
                             '<div>暂无信息</div>';
                         $("#originate-body").html(html);
                     }
-                } else {}
+                } else {alert(obj.errmsg);}
             },
             error: function(xhr, msg) {
                 alert("false");

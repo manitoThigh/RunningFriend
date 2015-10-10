@@ -92,7 +92,7 @@ class Register {
                     .$userName. " 你好！"
                     . "<br>您已经成功注册为约跑吧社区会员！<br>"
                     . "请点击以下链接激活此帐号：<br>"
-                    . '<a href="'.'http://'.
+                    . '<a href="'.'http://'
                     .'/RunningFriend/php/VerifyRegister.php?'
                     . 'active ='.$mailMd5.'&code ='.$randCode
                     . '">'

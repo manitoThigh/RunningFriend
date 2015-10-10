@@ -97,6 +97,7 @@
     -ms-transition: all .3s ease;
     -o-transition: all .3s ease;
     transition: all .3s ease;
+    cursor: pointer;
 }
 
 
@@ -122,6 +123,7 @@
 .header-frontend .nav li .dropdown-menu li a {
     line-height: 28px;
     padding: 3px 12px;
+    cursor: pointer;
 }
 .header-frontend .navbar-toggle{
     margin-top: 30px;
